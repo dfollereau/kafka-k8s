@@ -1,0 +1,109 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaMirrorMaker2
+metadata:
+  name: my-mm2-cluster
+  namespace: kafka-test
+spec:
+  clusters:
+    - alias: mirror1-cluster
+      bootstrapServers: 'my-cluster-a-kafka-bootstrap.kafka-test.svc.cluster.local:9092'
+    - alias: mirror2-cluster
+      bootstrapServers: 'my-cluster-b-kafka-bootstrap.kafka-test.svc.cluster.local:9092'
+      config:
+        config.storage.replication.factor: 1
+#        config.storage.topic: mm2-configs.my-cluster-a.internal
+        offset.storage.replication.factor: 1
+#        offset.storage.topic: mm2-offsets.my-cluster-a.internal
+        status.storage.replication.factor: 1
+#        status.storage.topic: mm2-status.my-cluster-a.internal
+  connectCluster: mirror2-cluster
+#  resources:
+#    requests:
+#      cpu: 500m
+#      memory: 0.5Gi
+#    limits:
+#      cpu: 500m
+#      memory: 0.5Gi
+#  logging:
+#    loggers:
+#      connect.root.logger.level: DEBUG
+#    type: inline
+  mirrors:
+#    - checkpointConnector:
+#        config:
+#          checkpoints.topic.replication.factor: 1
+#          emit.checkpoints.enabled: true
+#          emit.checkpoints.interval.seconds: 10
+#          refresh.groups.enabled: true
+#          refresh.groups.interval.seconds: 10
+#          sync.group.offsets.enabled: true
+#          sync.group.offsets.interval.seconds: 10
+    - groupsPattern: .*
+      heartbeatConnector:
+        config:
+          heartbeats.topic.replication.factor: 1
+      sourceCluster: mirror1-cluster
+#      sourceConnector:
+#        config:
+#          offset-syncs.topic.replication.factor: 1
+#          refresh.topics.enabled: true
+#          replication.factor: 1
+#          sync.topic.configs.enabled: true
+#          tasks.max: 2
+      targetCluster: mirror2-cluster
+      topicsPattern: .*
+  replicas: 2
+  version: 2.7.0
+  logging:
+    type: inline
+    loggers:
+      connect.root.logger.level: "OFF"
+      log4j.logger.org.apache.kafka.connect.runtime.rest.RestClient: "DEBUG"
+#      log4j.logger.org.apache.kafka.common.utils.AppInfoParser: "DEBUG"
+#      log4j.logger.org.apache.kafka.common.utils.ConfigUtils: "DEBUG"
+#      log4j.logger.org.apache.kafka.common.utils.KafkaThread: "DEBUG"
+#      log4j.logger.org.apache.kafka.common.utils.Utils: "DEBUG"
+      log4j.logger.org.apache.kafka.connect.cli.ConnectDistributed: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.connector.policy.AllConnectorClientConfigOverridePolicy: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.connector.policy.NoneConnectorClientConfigOverridePolicy: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.connector.policy.PrincipalConnectorClientConfigOverridePolicy: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.json.JsonConverterConfig: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.mirror.MirrorCheckpointConnector: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.mirror.MirrorSourceConnector: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.rest.basic.auth.extension.BasicAuthSecurityRestExtension: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.Connect: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.ConnectMetrics: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.ConnectorConfig: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.SourceTaskOffsetCommitter: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.Worker: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.WorkerConfig: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.WorkerConfigTransformer: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.WorkerInfo: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.distributed.DistributedConfig: "DEBUG"
+      log4j.logger.org.apache.kafka.connect.runtime.distributed.DistributedHerder: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.distributed.EagerAssignor: "DEBUG"
+      log4j.logger.org.apache.kafka.connect.runtime.distributed.IncrementalCooperativeAssignor: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.distributed.WorkerCoordinator: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.distributed.WorkerGroupMember: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.isolation.DelegatingClassLoader: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.isolation.PluginUtils: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.isolation.Plugins: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.rest.ConnectRestConfigurable: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.runtime.rest.RestServer: "DEBUG"
+      log4j.logger.org.apache.kafka.connect.runtime.rest.RestClient: "DEBUG"
+      log4j.logger.org.apache.kafka.connect.runtime.rest.resources.ConnectorsResource: "DEBUG"
+      log4j.logger.org.apache.kafka.connect.storage.KafkaConfigBackingStore: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.storage.KafkaOffsetBackingStore: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.storage.KafkaStatusBackingStore: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.storage.SimpleHeaderConverter: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.tools.MockConnector: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.util.ConnectUtils: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.util.KafkaBasedLog: "DEBUG"
+#      log4j.logger.org.apache.kafka.connect.util.TopicAdmin: "DEBUG"
+#      log4j.logger.org.apache.zookeeper: "DEBUG"
+#      log4j.logger.org.eclipse.jetty.server.Request: "DEBUG"
+#      log4j.logger.org.eclipse.jetty.server.Response: "DEBUG"
+#      log4j.logger.org.eclipse.jetty.server.HttpInput: "DEBUG"
+#      log4j.logger.org.eclipse.jetty.server.HttpOutput: "DEBUG"
+      log4j.logger.org.eclipse.jetty.server.HttpChannel: "DEBUG"
+      log4j.logger.org.eclipse.jetty.http.HttpGenerator: "DEBUG"
