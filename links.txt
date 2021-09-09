@@ -1,0 +1,4 @@
+https://snourian.com/kafka-kubernetes-strimzi-part-1-creating-deploying-strimzi-kafka/
+https://itnext.io/kafka-on-kubernetes-the-strimzi-way-part-1-bdff3e451788
+https://www.lightbend.com/blog/monitor-kafka-consumer-group-latency-with-kafka-lag-exporter
+https://github.com/dfollereau/kafka-build
