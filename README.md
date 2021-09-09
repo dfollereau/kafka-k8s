@@ -1,2 +1,2 @@
 # kafka-k8s
-Run kafka in minikube or in PaaS
+Run multiple Kafka clusters in different ns watched by one operator in a separate ns! Testing various Strimzi & Kafka options
